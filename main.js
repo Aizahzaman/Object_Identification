@@ -33,4 +33,27 @@ function gotresults(error,results){
 
 function draw(){
     image(image,0,0,500,400);
+    if(status!=""){
+        objectDetector.detect(image,gotresults);
+        for(i=0;i<objects.length;i++){
+            document.getElementById("status").innerHTML="Status: Objects Detected";
+            fill("red");
+            percent=floor(objects[i].confidence*100);
+            text(objects[i].label+" "+percent+"%",objects[i].x+15,objects[i].y+15);
+            noFill();
+            stroke("red");
+            rect(objects[i].x,objects[i].y,objects[i].width,objects[i].height);
+            if(objects[i].label==object_name){
+                image.stop();
+                objectDetector.detect(image.gotresults);
+                document.getElementById("object_status").innerHTMl=object_name+" Found";
+                synth=window.speechSynthesis;
+                utter=new SpeechSynthesisUtterance(object_name+" Found");
+                synth.speak(utter);
+            }
+            else{
+                document.getElementById("object_status").innerHTML=object_name+" Not Found";
+            }
+        }
+    }
 }
